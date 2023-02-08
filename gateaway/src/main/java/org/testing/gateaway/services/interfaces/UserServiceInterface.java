@@ -1,8 +1,5 @@
 package org.testing.gateaway.services.interfaces;
 
-
-
-
 import org.testing.gateaway.entities.AppUser;
 import org.testing.gateaway.enums.RoleEnum;
 

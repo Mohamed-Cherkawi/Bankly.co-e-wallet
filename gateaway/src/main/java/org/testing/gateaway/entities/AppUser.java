@@ -35,6 +35,9 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private Long id;
 
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
     @Column( nullable = false, length = 50)
     private String username;
 
@@ -52,12 +55,11 @@ public class AppUser implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AvailabilityStateEnum status = AvailabilityStateEnum.ONLINE;
+    private AvailabilityStateEnum status;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
 
 
     @Override

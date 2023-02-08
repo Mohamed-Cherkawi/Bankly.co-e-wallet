@@ -16,6 +16,8 @@ import org.testing.gateaway.services.interfaces.RoleServiceInterface;
 import org.testing.gateaway.services.interfaces.UserServiceInterface;
 import org.testing.gateaway.services.security.JwtService;
 
+import java.util.UUID;
+
 
 @Service @RequiredArgsConstructor
 public class AuthenticationService implements AuthenticationServiceInterface {
@@ -33,6 +35,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
             return null;
 
         AppUser user = AppUser.builder()
+                .uuid(UUID.randomUUID().toString())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
@@ -58,6 +61,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
                     )
             );
         } catch(AuthenticationException e){
+            e.printStackTrace();
             return "400";
         }
 
