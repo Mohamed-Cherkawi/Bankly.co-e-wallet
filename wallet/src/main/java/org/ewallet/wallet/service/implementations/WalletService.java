@@ -32,18 +32,23 @@ public class WalletService implements WalletServiceInter {
 
     @Override
     public WalletDto getWalletByUuid(String uuid) {
-        Optional<Wallet> wallet = walletRepository.getByUuid(uuid);
+        Optional<Wallet> wallet = walletRepository.findByUuid(uuid);
         if(wallet.isPresent())
             return EntityMapping.walletToWalletDto(wallet.get());
 
         return null;
     }
 
+    @Override
+    public WalletDto getWalletByOwnerReference(String ownerReference) {
+        Optional<Wallet> wallet = walletRepository.findByOwnerReference(ownerReference);
+        return wallet.map(EntityMapping::walletToWalletDto).orElse(null);
+
+    }
+
     @Override @Transactional
     public WalletDto createWallet(WalletDto walletDto) {
         Wallet wallet = EntityMapping.walletDtoToWallet(walletDto);
-
-        log.info("test test",wallet);
 
         wallet.setUuid(UUID.randomUUID().toString());
         wallet.setCreationDate(LocalDateTime.now(ZoneId.of("Africa/Casablanca")));
@@ -59,18 +64,24 @@ public class WalletService implements WalletServiceInter {
         return EntityMapping.walletToWalletDto(wallet);
     }
 
-    @Override
+    @Override @Transactional
     public WalletDto updateWallet(WalletDto walletDto) {
-        return null;
-    }
+        Optional<Wallet> walletToBeFound = walletRepository.findByUuid(walletDto.getUuid());
 
-    @Override
-    public void addToBalance() {
-        // To Be Created later
-    }
+            if (walletToBeFound.isEmpty())
+                return null;
 
-    @Override
-    public void subtractFromBalance() {
-        // To Be Created later
+            Wallet foundedWallet = walletToBeFound.get();
+            foundedWallet.setBalance(Double.parseDouble(walletDto.getBalance()));
+
+            try {
+                walletRepository.save(foundedWallet);
+            } catch (Exception e){
+                return null;
+            }
+            log.info("The Following wallet [ {} ] with the reference [ {} ] has been updated",foundedWallet.getName(),foundedWallet.getUuid());
+
+            return EntityMapping.walletToWalletDto(foundedWallet);
+
     }
 }
