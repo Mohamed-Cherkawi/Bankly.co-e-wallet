@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface WalletServiceInter {
     List<WalletDto> getAllWallets();
-    WalletDto getWalletByUuid(String reference);
+    WalletDto getWalletByUuid(String uuid);
+    WalletDto getWalletByOwnerReference(String ownerReference);
     WalletDto createWallet(WalletDto walletDto);
     WalletDto updateWallet(WalletDto walletDto);
-    void addToBalance();
-    void subtractFromBalance();
 }
