@@ -75,7 +75,7 @@ public class TransactionService implements TransactionServiceInter {
         try {
             if( walletApis.getSingleWalletByOwnerReferenceApi(transactionDto.getOperatorReference()).getStatusCode().toString().startsWith("200") ){
                 WalletDto walletDto = EntityMapping
-                        .ObjectToWalletDto(walletApis.getSingleWalletByOwnerReferenceApi(transactionDto.getOperatorReference()).getBody());
+                        .objectToWalletDto(walletApis.getSingleWalletByOwnerReferenceApi(transactionDto.getOperatorReference()).getBody());
                 log.info("from test {}",walletDto);
                 Double amount = isAmountValid(transactionDto.getAmount());
 
