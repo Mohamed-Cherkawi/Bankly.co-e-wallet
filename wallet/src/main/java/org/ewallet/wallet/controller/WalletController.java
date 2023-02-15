@@ -6,9 +6,9 @@ import org.ewallet.wallet.service.interfaces.WalletServiceInter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,7 +48,7 @@ public class WalletController{
                 ? ResponseEntity.ok(wallet)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The Wallet wasn't saved something went wrong please retry");
     }
-    @PatchMapping("/updating/balance")
+    @PutMapping("/updating/balance")
     ResponseEntity<Object> updateWalletBalanceApi(@RequestBody WalletDto walletDto){
         WalletDto wallet = walletService.updateWallet(walletDto);
         return (wallet != null)
