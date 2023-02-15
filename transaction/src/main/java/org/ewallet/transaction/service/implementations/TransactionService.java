@@ -41,20 +41,34 @@ public class TransactionService implements TransactionServiceInter {
     }
 
     private boolean deposit(WalletDto walletDto, Double amount) {
-        TransactionDto transaction = createTransaction(TransactionDto
-                .builder()
-                .type("DEPOSIT")
-                .amount(Double.toString(amount))
-                .operatorReference(walletDto.getOwnerReference())
-                .build());
+        TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"DEPOSIT");
 
-        log.info("check filled transaction data {}",transaction);
+        log.info("check pushed transaction data {}",transaction);
 
         if(transaction == null)
             return false;
 
-        amount = amount + Double.parseDouble(walletDto.getBalance());
-        walletDto.setBalance(Double.toString(amount));
+        Double balance = amount + Double.parseDouble(walletDto.getBalance());
+
+        return updateWalletBalance(walletDto,balance);
+    }
+    private boolean withdrawal(WalletDto walletDto, Double amount) {
+        boolean isThisAmountAllowedToBeRetrievedFromBalance = checkIfBalanceGreaterOrEqualGivenAmount(walletDto,amount);
+        if( isThisAmountAllowedToBeRetrievedFromBalance ){
+            TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"WITHDRAWAL");
+            log.info("check pushed transaction data {}",transaction);
+
+            if(transaction == null)
+                return false;
+
+            Double balance =  Double.parseDouble(walletDto.getBalance()) - amount;
+
+            return updateWalletBalance(walletDto,balance);
+        } else
+            return false;
+    }
+    private boolean updateWalletBalance(WalletDto walletDto, Double balance){
+        walletDto.setBalance(Double.toString(balance));
 
         log.info("Updated Balance Wallet : {}",walletDto);
         try {
@@ -65,11 +79,14 @@ public class TransactionService implements TransactionServiceInter {
         }
         return true;
     }
-
-    private boolean withdrawal(WalletDto walletDto, Double amount) {
-        return false;
+    private TransactionDto forwardToCreateTransactionMethod(WalletDto walletDto , Double amount , String operationType){
+        return createTransaction(TransactionDto
+                .builder()
+                .type(operationType)
+                .amount(Double.toString(amount))
+                .operatorReference(walletDto.getOwnerReference())
+                .build());
     }
-
     @Override
     public String makeOperation(String operationType, TransactionDto transactionDto) {
         try {
@@ -91,19 +108,19 @@ public class TransactionService implements TransactionServiceInter {
 
 
                     return isOperationSucceed
-                            ? "The " + operationType.toLowerCase() + " Operation Was Successfully Made"
-                            : "The Operation Didn't Complete Something Went Wrong";
+                            ? "201 The " + operationType.toLowerCase() + " Operation Was Successfully Made"
+                            : "500 The Operation Didn't Complete Something Went Wrong";
                 } else
-                    return "Something Wrong With The Provided Amount";
+                    return "404 The Provided Amount Does Not exist";
             }
         } catch (Exception e){
-            return "The Provided Owner Reference does not exist";
+            return "500 The Provided Owner Reference Does Not Exist Or Something Went Wrong At Server Side Level";
         }
         return "";
     }
 
-    private boolean isBalanceCompatible(WalletDto wallet, Double amount) {
-            return true;
+    private boolean checkIfBalanceGreaterOrEqualGivenAmount(WalletDto wallet, Double amount) {
+            return Double.parseDouble(wallet.getBalance()) >= amount;
         }
 
     private Double isAmountValid(String amount){
