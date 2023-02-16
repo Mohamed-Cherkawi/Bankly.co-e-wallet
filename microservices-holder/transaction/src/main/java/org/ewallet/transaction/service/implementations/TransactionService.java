@@ -41,7 +41,7 @@ public class TransactionService implements TransactionServiceInter {
     }
 
     private boolean deposit(WalletDto walletDto, Double amount) {
-        TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"DEPOSIT");
+        TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"deposit");
 
         log.info("check pushed transaction data {}",transaction);
 
@@ -55,7 +55,7 @@ public class TransactionService implements TransactionServiceInter {
     private boolean withdrawal(WalletDto walletDto, Double amount) {
         boolean isThisAmountAllowedToBeRetrievedFromBalance = checkIfBalanceGreaterOrEqualGivenAmount(walletDto,amount);
         if( isThisAmountAllowedToBeRetrievedFromBalance ){
-            TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"WITHDRAWAL");
+            TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"withdrawal");
             log.info("check pushed transaction data {}",transaction);
 
             if(transaction == null)
