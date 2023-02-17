@@ -20,7 +20,7 @@ public interface WalletApis {
     @GetMapping("wallet/api/v1/fetching/single/ref/owner/{ownerId}")
     ResponseEntity<Object> getSingleWalletByOwnerReferenceApi(@PathVariable("ownerId") String reference);
     @PostMapping("wallet/api/v1/adding")
-    ResponseEntity<Object> saveWalletApi(@RequestBody WalletDto walletDto);
+    ResponseEntity<Object> createWalletApi(@RequestBody WalletDto walletDto);
     @PutMapping("wallet/api/v1/updating/balance")
     ResponseEntity<WalletDto> updateWalletBalanceApi(@RequestBody WalletDto walletDto);
 }
