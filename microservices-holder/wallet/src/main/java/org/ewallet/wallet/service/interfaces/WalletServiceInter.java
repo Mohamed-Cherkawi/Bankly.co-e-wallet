@@ -8,6 +8,6 @@ public interface WalletServiceInter {
     List<WalletDto> getAllWallets();
     WalletDto getWalletByUuid(String uuid);
     WalletDto getWalletByOwnerReference(String ownerReference);
-    WalletDto createWallet(WalletDto walletDto);
+    WalletDto saveWallet(WalletDto walletDto);
     WalletDto updateWallet(WalletDto walletDto);
 }
