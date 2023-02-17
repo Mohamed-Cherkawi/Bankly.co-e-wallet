@@ -42,8 +42,8 @@ public class WalletController{
         return (wallet != null) ? ResponseEntity.ok(wallet) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is no wallet with this owner reference");
     }
     @PostMapping("/adding")
-    ResponseEntity<Object> saveWalletApi(@RequestBody WalletDto walletDto){
-        WalletDto wallet = walletService.createWallet(walletDto);
+    ResponseEntity<Object> createWalletApi(@RequestBody WalletDto walletDto){
+        WalletDto wallet = walletService.saveWallet(walletDto);
         return (wallet != null)
                 ? ResponseEntity.ok(wallet)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The Wallet wasn't saved something went wrong please retry");
