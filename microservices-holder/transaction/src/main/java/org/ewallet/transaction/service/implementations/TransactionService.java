@@ -54,8 +54,8 @@ public class TransactionService implements TransactionServiceInter {
         return updateWalletBalance(walletDto,balance);
     }
     private boolean withdrawal(WalletDto walletDto, Double amount) {
-        boolean isThisAmountAllowedToBeRetrievedFromBalance = checkIfBalanceGreaterOrEqualGivenAmount(walletDto,amount);
-        if( isThisAmountAllowedToBeRetrievedFromBalance ){
+        boolean isAllowedToBeWithdrawn = checkIfBalanceGreaterOrEqualGivenAmount(walletDto,amount);
+        if( isAllowedToBeWithdrawn ){
             TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,TransactionType.WITHDRAWAL);
             log.info("check pushed transaction data {}",transaction);
 
