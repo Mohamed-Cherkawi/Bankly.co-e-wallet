@@ -6,6 +6,7 @@ import org.ewallet.transaction.client.apis.WalletApis;
 import org.ewallet.transaction.dto.TransactionDto;
 import org.ewallet.transaction.dto.WalletDto;
 import org.ewallet.transaction.entity.Transaction;
+import org.ewallet.transaction.enums.TransactionType;
 import org.ewallet.transaction.repository.TransactionRepository;
 import org.ewallet.transaction.service.interfaces.TransactionServiceInter;
 import org.ewallet.transaction.util.EntityMapping;
@@ -41,7 +42,7 @@ public class TransactionService implements TransactionServiceInter {
     }
 
     private boolean deposit(WalletDto walletDto, Double amount) {
-        TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"deposit");
+        TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,TransactionType.DEPOSIT);
 
         log.info("check pushed transaction data {}",transaction);
 
@@ -55,7 +56,7 @@ public class TransactionService implements TransactionServiceInter {
     private boolean withdrawal(WalletDto walletDto, Double amount) {
         boolean isThisAmountAllowedToBeRetrievedFromBalance = checkIfBalanceGreaterOrEqualGivenAmount(walletDto,amount);
         if( isThisAmountAllowedToBeRetrievedFromBalance ){
-            TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,"withdrawal");
+            TransactionDto transaction = forwardToCreateTransactionMethod(walletDto,amount,TransactionType.WITHDRAWAL);
             log.info("check pushed transaction data {}",transaction);
 
             if(transaction == null)
@@ -79,10 +80,10 @@ public class TransactionService implements TransactionServiceInter {
         }
         return true;
     }
-    private TransactionDto forwardToCreateTransactionMethod(WalletDto walletDto , Double amount , String operationType){
+    private TransactionDto forwardToCreateTransactionMethod(WalletDto walletDto , Double amount , TransactionType transactionType){
         return createTransaction(TransactionDto
                 .builder()
-                .type(operationType)
+                .type(transactionType.toString())
                 .amount(Double.toString(amount))
                 .operatorReference(walletDto.getOwnerReference())
                 .build());
