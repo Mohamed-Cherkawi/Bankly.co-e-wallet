@@ -47,7 +47,7 @@ public class WalletService implements WalletServiceInter {
     }
 
     @Override @Transactional
-    public WalletDto createWallet(WalletDto walletDto) {
+    public WalletDto saveWallet(WalletDto walletDto) {
         Wallet wallet = EntityMapping.walletDtoToWallet(walletDto);
 
         wallet.setUuid(UUID.randomUUID().toString());
