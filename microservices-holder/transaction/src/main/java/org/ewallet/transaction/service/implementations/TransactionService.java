@@ -15,8 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -118,6 +121,18 @@ public class TransactionService implements TransactionServiceInter {
             return "500 The Provided Owner Reference Does Not Exist Or Something Went Wrong At Server Side Level";
         }
         return "";
+    }
+
+    @Override
+    public List<TransactionDto> getAllTransactions() {
+        return transactionRepository.findAll().stream()
+                .map(EntityMapping::transactionToTransactionDto)
+                .toList();
+    }
+
+    @Override
+    public TransactionDto getTransactionByReference(String reference) {
+        return EntityMapping.transactionToTransactionDto(transactionRepository.findByUuid(reference).get());
     }
 
     private boolean checkIfBalanceGreaterOrEqualGivenAmount(WalletDto wallet, Double amount) {
